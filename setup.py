@@ -7,9 +7,9 @@ with open("README.rst") as readme_file:
 packages = find_packages()
 
 setup(
-    name="caas",
+    name="raas",
     version="1.0.0",
-    description="caas",
+    description="raas",
     long_description=readme,
     author="Bogdan Mustiata",
     author_email="bogdan.mustiata@gmail.com",
