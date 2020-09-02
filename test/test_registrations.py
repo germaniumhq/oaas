@@ -1,14 +1,14 @@
 from typing import Any, List
 
-import caas
+import oaas
 
 
-@caas.client("users-get")
+@oaas.client("users-get")
 def get_users(group: str) -> List[Any]:
     ...
 
 
-@caas.client("datastore")
+@oaas.client("datastore")
 class DataStore:
     def put_item(self, key: str, value: Any) -> None:
         ...
@@ -20,12 +20,12 @@ class DataStore:
         ...
 
 
-@caas.service("users-get")
+@oaas.service("users-get")
 def get_user_list(group: str) -> List[Any]:
     ...
 
 
-@caas.service("datastore")
+@oaas.service("datastore")
 class DataStoreService:
     def put_item(self, key: str, value: Any) -> None:
         ...
@@ -37,12 +37,12 @@ class DataStoreService:
         ...
 
 
-@caas.service("intercept")
+@oaas.service("intercept")
 def get_user_intercept(group: str) -> List[Any]:
     ...
 
 
-@caas.service("datastore")
+@oaas.service("datastore")
 class DataStoreIntercept:
     def put_item(self, key: str, value: Any) -> None:
         ...

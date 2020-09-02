@@ -7,9 +7,9 @@ with open("README.rst") as readme_file:
 packages = find_packages()
 
 setup(
-    name="raas",
+    name="oaas",
     version="1.0.0",
-    description="raas",
+    description="Operation as a Service",
     long_description=readme,
     author="Bogdan Mustiata",
     author_email="bogdan.mustiata@gmail.com",
@@ -18,6 +18,6 @@ setup(
     packages=packages,
     package_data={
         "": ["*.txt", "*.rst"],
-        "caas": ["py.typed"],
+        "oaas": ["py.typed"],
     },
 )
