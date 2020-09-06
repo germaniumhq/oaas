@@ -65,7 +65,8 @@ def get_client(t: Type[T]) -> T:
     Create a client for the given type.
     """
     for provider in registrations.serialization_providers:
-        if provider.can_handle(t):
+        client_definition = registrations.clients[t]
+        if provider.can_handle(client_definition):
             return provider.create_client(t)
 
     raise Exception(

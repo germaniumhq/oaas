@@ -1,6 +1,7 @@
 from typing import Type, Any, Dict, cast
 
 import oaas._registrations as registrations
+from oaas.client_definition import ClientDefinition
 from oaas.serialization_provider import SerializationProvider, T
 
 
@@ -26,5 +27,5 @@ class LocalSerializationProvider(SerializationProvider):
 
         return cast(T, ReflectionInvoker(delegate=service_instance))
 
-    def can_handle(self, t: Type[T], *args, **kw) -> bool:
+    def can_handle(self, client_definition: ClientDefinition) -> bool:
         return True

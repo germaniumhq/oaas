@@ -1,6 +1,8 @@
 import abc
 from typing import Type, TypeVar
 
+from oaas.client_definition import ClientDefinition
+
 T = TypeVar("T")
 
 
@@ -19,5 +21,5 @@ class SerializationProvider(metaclass=abc.ABCMeta):
         ...
 
     @abc.abstractmethod
-    def can_handle(self, t: Type[T]) -> bool:
+    def can_handle(self, client_definition: ClientDefinition) -> bool:
         pass
