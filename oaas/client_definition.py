@@ -4,11 +4,13 @@ ClientDefinitionMetadata = Dict[str, Any]
 
 
 class ClientDefinition:
-    def __init__(self,
-                 *,
-                 name: str,
-                 code: Callable,
-                 metadata: Optional[ClientDefinitionMetadata] = None) -> None:
+    def __init__(
+        self,
+        *,
+        name: str,
+        code: Callable,
+        metadata: Optional[ClientDefinitionMetadata] = None
+    ) -> None:
         self.name = name
         self.code = code
         self.metadata = metadata

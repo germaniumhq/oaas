@@ -8,14 +8,16 @@ from oaas.service_definition import ServiceDefinition, ServiceDefinitionMetadata
 T = TypeVar("T")
 
 
-def client(name: str,
-           metadata: Optional[ClientDefinitionMetadata] = None) -> Callable[..., Callable[..., T]]:
+def client(
+    name: str, metadata: Optional[ClientDefinitionMetadata] = None
+) -> Callable[..., Callable[..., T]]:
     """
     Declare a service from the system. All the input and output data
     should be serializable. The serialization format depends on
     the provider being used. To get an instance to the client, call
     `get_client`.
     """
+
     def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
         registrations.clients[f] = ClientDefinition(
             name=name,
@@ -27,13 +29,15 @@ def client(name: str,
     return wrapper_builder
 
 
-def service(name: str,
-            metadata: Optional[ServiceDefinitionMetadata] = None) -> Callable[..., Callable[..., T]]:
+def service(
+    name: str, metadata: Optional[ServiceDefinitionMetadata] = None
+) -> Callable[..., Callable[..., T]]:
     """
     Mark a service to be exposed to the system. All the input
     and output data should be serializable. The serialization
     format depends on the provider being used.
     """
+
     def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
         registrations.services[name] = ServiceDefinition(
             name=name,
@@ -64,8 +68,9 @@ def get_client(t: Type[T]) -> T:
         if provider.can_handle(t):
             return provider.create_client(t)
 
-    raise Exception(f"No serialization provider was registered to handle "
-                    f"{t} clients.")
+    raise Exception(
+        f"No serialization provider was registered to handle " f"{t} clients."
+    )
 
 
 def register_serialization_provider(serialization_provider: SerializationProvider):
