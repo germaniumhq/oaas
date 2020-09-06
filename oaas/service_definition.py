@@ -1,6 +1,7 @@
-from typing import Callable, Dict, Optional, Any
+from typing import Dict, Optional, Any, TypeVar, Type
 
 ServiceDefinitionMetadata = Dict[str, Any]
+T = TypeVar("T")
 
 
 class ServiceDefinition:
@@ -8,7 +9,7 @@ class ServiceDefinition:
         self,
         *,
         name: str,
-        code: Callable,
+        code: Type[T],
         metadata: Optional[ServiceDefinitionMetadata] = None
     ) -> None:
         self.name = name

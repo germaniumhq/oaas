@@ -1,5 +1,5 @@
 import abc
-from typing import Type, TypeVar
+from typing import TypeVar
 
 from oaas.client_definition import ClientDefinition
 
@@ -17,7 +17,7 @@ class SerializationProvider(metaclass=abc.ABCMeta):
         ...
 
     @abc.abstractmethod
-    def create_client(self, t: Type[T]) -> T:
+    def create_client(self, client_definition: ClientDefinition) -> T:
         ...
 
     @abc.abstractmethod

@@ -10,7 +10,7 @@ T = TypeVar("T")
 
 def client(
     name: str, metadata: Optional[ClientDefinitionMetadata] = None
-) -> Callable[..., Callable[..., T]]:
+) -> Callable[..., Type[T]]:
     """
     Declare a service from the system. All the input and output data
     should be serializable. The serialization format depends on
@@ -18,33 +18,37 @@ def client(
     `get_client`.
     """
 
-    def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
-        registrations.clients[f] = ClientDefinition(
+    def wrapper_builder(t: Type[T]) -> Type[T]:
+        cd = ClientDefinition(
             name=name,
-            code=f,
+            code=t,
             metadata=metadata,
         )
-        return f
+        registrations.clients[t] = cd
+
+        return t
 
     return wrapper_builder
 
 
 def service(
     name: str, metadata: Optional[ServiceDefinitionMetadata] = None
-) -> Callable[..., Callable[..., T]]:
+) -> Callable[..., Type[T]]:
     """
     Mark a service to be exposed to the system. All the input
     and output data should be serializable. The serialization
     format depends on the provider being used.
     """
 
-    def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
-        registrations.services[name] = ServiceDefinition(
+    def wrapper_builder(t: Type[T]) -> Type[T]:
+        sd = ServiceDefinition(
             name=name,
-            code=f,
+            code=t,
             metadata=metadata,
         )
-        return f
+        registrations.services[sd] = True
+
+        return t
 
     return wrapper_builder
 
@@ -67,7 +71,7 @@ def get_client(t: Type[T]) -> T:
     for provider in registrations.serialization_providers:
         client_definition = registrations.clients[t]
         if provider.can_handle(client_definition):
-            return provider.create_client(t)
+            return provider.create_client(client_definition)
 
     raise Exception(
         f"No serialization provider was registered to handle " f"{t} clients."

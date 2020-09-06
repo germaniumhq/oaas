@@ -1,5 +1,6 @@
-from typing import Callable, Dict, Optional, Any
+from typing import Dict, Optional, Any, TypeVar, Type
 
+T = TypeVar("T")
 ClientDefinitionMetadata = Dict[str, Any]
 
 
@@ -8,7 +9,7 @@ class ClientDefinition:
         self,
         *,
         name: str,
-        code: Callable,
+        code: Type[T],
         metadata: Optional[ClientDefinitionMetadata] = None
     ) -> None:
         self.name = name

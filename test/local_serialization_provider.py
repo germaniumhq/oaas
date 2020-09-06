@@ -1,4 +1,4 @@
-from typing import Type, Any, Dict, cast
+from typing import Any, Dict, cast
 
 import oaas._registrations as registrations
 from oaas.client_definition import ClientDefinition
@@ -18,11 +18,10 @@ class LocalSerializationProvider(SerializationProvider):
         self._service_instance: Dict[str, Any] = dict()
 
     def serve(self) -> None:
-        for service_name, service_definition in registrations.services.items():
-            self._service_instance[service_name] = service_definition.code()
+        for service_definition, _ in registrations.services.items():
+            self._service_instance[service_definition.name] = service_definition.code()
 
-    def create_client(self, t: Type[T]) -> T:
-        client_definition = registrations.clients[t]
+    def create_client(self, client_definition: ClientDefinition) -> T:
         service_instance = self._service_instance[client_definition.name]
 
         return cast(T, ReflectionInvoker(delegate=service_instance))
