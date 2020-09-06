@@ -1,11 +1,31 @@
 from typing import Any, List
 
 import oaas
+import unittest
+
+from test.local_serialization_provider import LocalSerializationProvider
+from oaas.serialization_provider import SerializationProvider
 
 
-@oaas.client("users-get")
-def get_users(group: str) -> List[Any]:
-    ...
+@oaas.service("datastore")
+class DataStoreService:
+    def __init__(self) -> None:
+        self._items = dict()
+
+    def put_item(self, key: str, value: Any) -> None:
+        self._items[key] = value
+
+    def get_item(self, key: str) -> Any:
+        if key in self._items:
+            return self._items.get(key)
+
+        return None
+
+    def remove_item(self, key: str) -> None:
+        del self._items[key]
+
+
+oaas.serve()
 
 
 @oaas.client("datastore")
@@ -20,35 +40,18 @@ class DataStore:
         ...
 
 
-@oaas.service("users-get")
-def get_user_list(group: str) -> List[Any]:
-    ...
+provider = LocalSerializationProvider()
+oaas.register_serialization_provider(provider)
+
+oaas.serve()
 
 
-@oaas.service("datastore")
-class DataStoreService:
-    def put_item(self, key: str, value: Any) -> None:
-        ...
+class TestServiceRegistrar(unittest.TestCase):
+    def test_service_calls(self) -> None:
+        data_store = oaas.get_client(DataStore)
 
-    def get_item(self, key: str) -> None:
-        ...
-
-    def remove_item(self, key: str) -> None:
-        ...
-
-
-@oaas.service("intercept")
-def get_user_intercept(group: str) -> List[Any]:
-    ...
-
-
-@oaas.service("datastore")
-class DataStoreIntercept:
-    def put_item(self, key: str, value: Any) -> None:
-        ...
-
-    def get_item(self, key: str) -> None:
-        ...
-
-    def remove_item(self, key: str) -> None:
-        ...
+        self.assertIsNone(data_store.get_item("a"))
+        data_store.put_item("a", "avalue")
+        self.assertEqual("avalue", data_store.get_item("a"))
+        data_store.remove_item("a")
+        self.assertIsNone(data_store.get_item("a"))

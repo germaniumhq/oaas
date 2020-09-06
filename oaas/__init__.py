@@ -1,52 +1,76 @@
-import functools
-from typing import Callable, TypeVar
+from typing import Callable, TypeVar, Type, Optional
+
+import oaas._registrations as registrations
+from oaas.client_definition import ClientDefinitionMetadata, ClientDefinition
+from oaas.serialization_provider import SerializationProvider
+from oaas.service_definition import ServiceDefinition, ServiceDefinitionMetadata
 
 T = TypeVar("T")
 
 
-def client(name: str) -> Callable[..., Callable[..., T]]:
+def client(name: str,
+           metadata: Optional[ClientDefinitionMetadata] = None) -> Callable[..., Callable[..., T]]:
     """
-    Use a service from the system. All the input and output data
-    should be serializable.
+    Declare a service from the system. All the input and output data
+    should be serializable. The serialization format depends on
+    the provider being used. To get an instance to the client, call
+    `get_client`.
     """
-
     def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
-        @functools.wraps(f)
-        def wrapper(*args, **kw) -> T:
-            return f(*args, **kw)
-
-        return wrapper
+        registrations.clients[f] = ClientDefinition(
+            name=name,
+            code=f,
+            metadata=metadata,
+        )
+        return f
 
     return wrapper_builder
 
 
-def service(name: str) -> Callable[..., Callable[..., T]]:
+def service(name: str,
+            metadata: Optional[ServiceDefinitionMetadata] = None) -> Callable[..., Callable[..., T]]:
     """
-    Expose a service to the system. All the input and output data
-    should be serializable.
+    Mark a service to be exposed to the system. All the input
+    and output data should be serializable. The serialization
+    format depends on the provider being used.
     """
-
     def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
-        @functools.wraps(f)
-        def wrapper(*args, **kw) -> T:
-            return f(*args, **kw)
-
-        return wrapper
+        registrations.services[name] = ServiceDefinition(
+            name=name,
+            code=f,
+            metadata=metadata,
+        )
+        return f
 
     return wrapper_builder
 
 
-def intercept(name: str) -> Callable[..., Callable[..., T]]:
+def serve() -> None:
     """
-    Intercept service calls. All the inputs and output data should
-    be serializable.
+    Expose all the defined services using the underlying
+    providers.
     """
+    # FIXME: If multiple providers are configured they should be
+    # exposed and then joined.
+    for provider in registrations.serialization_providers:
+        provider.serve()
 
-    def wrapper_builder(f: Callable[..., T]) -> Callable[..., T]:
-        @functools.wraps(f)
-        def wrapper(*args, **kw) -> T:
-            return f(*args, **kw)
 
-        return wrapper
+def get_client(t: Type[T]) -> T:
+    """
+    Create a client for the given type.
+    """
+    for provider in registrations.serialization_providers:
+        if provider.can_handle(t):
+            return provider.create_client(t)
 
-    return wrapper_builder
+    raise Exception(f"No serialization provider was registered to handle "
+                    f"{t} clients.")
+
+
+def register_serialization_provider(serialization_provider: SerializationProvider):
+    """
+    Register a serialization provider. Normally this should be taken
+    care by the midlleware.
+    """
+    registrations.serialization_providers.add(serialization_provider)
