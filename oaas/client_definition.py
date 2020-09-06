@@ -4,9 +4,6 @@ ClientDefinitionMetadata = Dict[str, Any]
 
 
 class ClientDefinition:
-    name: str
-    code: Callable
-
     def __init__(self,
                  *,
                  name: str,

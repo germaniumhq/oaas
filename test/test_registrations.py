@@ -1,16 +1,14 @@
-from typing import Any, List
+import unittest
+from typing import Any, Dict
 
 import oaas
-import unittest
-
 from test.local_serialization_provider import LocalSerializationProvider
-from oaas.serialization_provider import SerializationProvider
 
 
 @oaas.service("datastore")
 class DataStoreService:
     def __init__(self) -> None:
-        self._items = dict()
+        self._items: Dict[str, Any] = dict()
 
     def put_item(self, key: str, value: Any) -> None:
         self._items[key] = value
@@ -33,7 +31,7 @@ class DataStore:
     def put_item(self, key: str, value: Any) -> None:
         ...
 
-    def get_item(self, key: str) -> None:
+    def get_item(self, key: str) -> Any:
         ...
 
     def remove_item(self, key: str) -> None:

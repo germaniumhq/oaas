@@ -5,9 +5,6 @@ ServiceDefinitionMetadata = Dict[str, Any]
 
 
 class ServiceDefinition:
-    name: str
-    code: Callable
-
     def __init__(self,
                  *,
                  name: str,
