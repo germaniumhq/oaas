@@ -2,7 +2,7 @@ from typing import Callable, TypeVar, Type, Optional
 
 import oaas._registrations as registrations
 from oaas.client_definition import ClientDefinitionMetadata, ClientDefinition
-from oaas.serialization_provider import SerializationProvider
+from oaas.server_provider import ServerMiddleware
 from oaas.service_definition import ServiceDefinition, ServiceDefinitionMetadata
 
 T = TypeVar("T")
@@ -60,7 +60,7 @@ def serve() -> None:
     """
     # FIXME: If multiple providers are configured they should be
     # exposed and then joined.
-    for provider in registrations.serialization_providers:
+    for provider in registrations.servers_middleware:
         provider.serve()
 
 
@@ -68,7 +68,7 @@ def get_client(t: Type[T]) -> T:
     """
     Create a client for the given type.
     """
-    for provider in registrations.serialization_providers:
+    for provider in registrations.clients_middleware:
         client_definition = registrations.clients[t]
         if provider.can_handle(client_definition):
             return provider.create_client(client_definition)
@@ -78,9 +78,9 @@ def get_client(t: Type[T]) -> T:
     )
 
 
-def register_serialization_provider(serialization_provider: SerializationProvider):
+def register_server_provider(serialization_provider: ServerMiddleware):
     """
     Register a serialization provider. Normally this should be taken
     care by the midlleware.
     """
-    registrations.serialization_providers.add(serialization_provider)
+    registrations.servers_middleware.add(serialization_provider)

@@ -2,7 +2,7 @@ import unittest
 from typing import Any, Dict
 
 import oaas
-from test.local_serialization_provider import LocalSerializationProvider
+from test.local_serialization_provider import LocalClientServerMiddleware
 
 
 @oaas.service("datastore")
@@ -38,8 +38,8 @@ class DataStore:
         ...
 
 
-provider = LocalSerializationProvider()
-oaas.register_serialization_provider(provider)
+provider = LocalClientServerMiddleware()
+oaas.register_server_provider(provider)
 
 oaas.serve()
 

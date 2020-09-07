@@ -1,8 +1,11 @@
-from typing import Any, Dict, cast
+from typing import Any, Dict, cast, TypeVar
 
 import oaas._registrations as registrations
 from oaas.client_definition import ClientDefinition
-from oaas.serialization_provider import SerializationProvider, T
+from oaas.client_provider import ClientMiddleware
+from oaas.server_provider import ServerMiddleware
+
+T = TypeVar("T")
 
 
 class ReflectionInvoker:
@@ -13,7 +16,11 @@ class ReflectionInvoker:
         return getattr(self._delegate, item)
 
 
-class LocalSerializationProvider(SerializationProvider):
+class LocalClientServerMiddleware(ClientMiddleware, ServerMiddleware):
+    """
+    Provides a server that can invoke local services
+    """
+
     def __init__(self) -> None:
         self._service_instance: Dict[str, Any] = dict()
 
