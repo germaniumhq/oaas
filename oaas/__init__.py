@@ -2,6 +2,7 @@ from typing import Callable, TypeVar, Type, Optional
 
 import oaas._registrations as registrations
 from oaas.client_definition import ClientDefinitionMetadata, ClientDefinition
+from oaas.client_provider import ClientMiddleware
 from oaas.server_provider import ServerMiddleware
 from oaas.service_definition import ServiceDefinition, ServiceDefinitionMetadata
 
