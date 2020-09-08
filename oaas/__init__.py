@@ -65,6 +65,14 @@ def serve() -> None:
         provider.serve()
 
 
+def join() -> None:
+    """
+    Wait for all the defined servers to come down.
+    """
+    for provider in registrations.servers_middleware:
+        provider.join()
+
+
 def get_client(t: Type[T]) -> T:
     """
     Create a client for the given type.
@@ -79,9 +87,17 @@ def get_client(t: Type[T]) -> T:
     )
 
 
-def register_server_provider(serialization_provider: ServerMiddleware):
+def register_server_provider(server_middleware: ServerMiddleware):
     """
     Register a serialization provider. Normally this should be taken
-    care by the midlleware.
+    care by the middleware.
     """
-    registrations.servers_middleware.add(serialization_provider)
+    registrations.servers_middleware.add(server_middleware)
+
+
+def register_client_provider(client_middleware: ClientMiddleware):
+    """
+    Register a serialization provider. Normally this should be taken
+    care by the middleware.
+    """
+    registrations.clients_middleware.add(client_middleware)
