@@ -23,9 +23,6 @@ class DataStoreService:
         del self._items[key]
 
 
-oaas.serve()
-
-
 @oaas.client("datastore")
 class DataStore:
     def put_item(self, key: str, value: Any) -> None:
@@ -40,6 +37,7 @@ class DataStore:
 
 provider = LocalClientServerMiddleware()
 oaas.register_server_provider(provider)
+oaas.register_client_provider(provider)
 
 oaas.serve()
 

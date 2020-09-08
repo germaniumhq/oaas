@@ -28,6 +28,9 @@ class LocalClientServerMiddleware(ClientMiddleware, ServerMiddleware):
         for service_definition, _ in registrations.services.items():
             self._service_instance[service_definition.name] = service_definition.code()
 
+    def join(self) -> None:
+        pass
+
     def create_client(self, client_definition: ClientDefinition) -> T:
         service_instance = self._service_instance[client_definition.name]
 
