@@ -1,4 +1,4 @@
-from typing import Callable, TypeVar, Type, Optional
+from typing import Callable, TypeVar, Type, Optional, Dict
 
 import oaas._registrations as registrations
 from oaas.client_definition import ClientDefinitionMetadata, ClientDefinition
@@ -10,7 +10,10 @@ T = TypeVar("T")
 
 
 def client(
-    name: str, metadata: Optional[ClientDefinitionMetadata] = None
+    name: str,
+    namespace: str = "default",
+    version: str = "1",
+    tags: Dict[str, str] = None
 ) -> Callable[..., Type[T]]:
     """
     Declare a service from the system. All the input and output data
@@ -22,8 +25,10 @@ def client(
     def wrapper_builder(t: Type[T]) -> Type[T]:
         cd = ClientDefinition(
             name=name,
+            namespace=namespace,
+            version=version,
             code=t,
-            metadata=metadata,
+            tags=tags,
         )
         registrations.clients[t] = cd
 
@@ -33,7 +38,11 @@ def client(
 
 
 def service(
-    name: str, metadata: Optional[ServiceDefinitionMetadata] = None
+    name: str,
+    *,
+    namespace: str = "default",
+    version: str = "1",
+    tags: Optional[Dict[str, str]] = None,
 ) -> Callable[..., Type[T]]:
     """
     Mark a service to be exposed to the system. All the input
@@ -43,11 +52,13 @@ def service(
 
     def wrapper_builder(t: Type[T]) -> Type[T]:
         sd = ServiceDefinition(
+            namespace=namespace,
             name=name,
+            version=version,
             code=t,
-            metadata=metadata,
+            tags=tags,
         )
-        registrations.services[sd] = True
+        registrations.services.append(sd)
 
         return t
 
