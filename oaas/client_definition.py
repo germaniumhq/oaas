@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Any, TypeVar, Type
+from typing import Dict, Optional, Any, TypeVar, Type, Callable
 
 T = TypeVar("T")
 ClientDefinitionMetadata = Dict[str, Any]
@@ -11,8 +11,8 @@ class ClientDefinition:
         namespace: str = "default",
         name: str,
         version: str = "1",
-        code: Type[T],
-        tags: Dict[str, str] = None
+        code: Callable[..., T],
+        tags: Dict[str, str] = None,
     ) -> None:
         self.namespace = namespace
         self.name = name

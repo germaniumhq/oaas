@@ -12,7 +12,7 @@ class ServiceDefinition:
         name: str,
         version: str = "1",
         code: Type[T],
-        tags: Optional[Dict[str, str]] = None
+        tags: Optional[Dict[str, str]] = None,
     ) -> None:
         self.namespace = namespace
         self.name = name

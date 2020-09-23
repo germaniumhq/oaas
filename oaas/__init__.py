@@ -13,7 +13,7 @@ def client(
     name: str,
     namespace: str = "default",
     version: str = "1",
-    tags: Dict[str, str] = None
+    tags: Dict[str, str] = None,
 ) -> Callable[..., Type[T]]:
     """
     Declare a service from the system. All the input and output data

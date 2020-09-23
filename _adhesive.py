@@ -5,8 +5,8 @@ germanium_py_exe.pipeline(
     {
         "repo": "git@github.com:germaniumhq/oaas.git",
         "binaries": {
-            "name": "Python 3.7 on Linux x64",
-            "platform": "python:3.7",
+            "name": "Python 3.8 on Linux x64",
+            "platform": "python:3.8",
             "publish_pypi": "sdist",
         },
     }

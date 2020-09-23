@@ -25,7 +25,7 @@ class LocalClientServerMiddleware(ClientMiddleware, ServerMiddleware):
         self._service_instance: Dict[str, Any] = dict()
 
     def serve(self) -> None:
-        for service_definition, _ in registrations.services.items():
+        for service_definition in registrations.services:
             self._service_instance[service_definition.name] = service_definition.code()
 
     def join(self) -> None:
