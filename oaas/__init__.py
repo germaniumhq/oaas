@@ -70,10 +70,29 @@ def serve() -> None:
     Expose all the defined services using the underlying
     providers.
     """
-    # FIXME: If multiple providers are configured they should be
-    # exposed and then joined.
+    services_without_middleware = set()
+
+    for service in registrations.services:
+        if not _has_server_middleware(service):
+            services_without_middleware.add(service)
+
+    if services_without_middleware:
+        raise Exception(
+            "Some services have no backing middleware. Make sure the "
+            "middleware servers are added using oaas.register_server_provider() "
+            f"before calling serve(): {services_without_middleware}"
+        )
+
     for provider in registrations.servers_middleware:
         provider.serve()
+
+
+def _has_server_middleware(service) -> bool:
+    for provider in registrations.servers_middleware:
+        if provider.can_serve(service):
+            return True
+
+    return False
 
 
 def join() -> None:

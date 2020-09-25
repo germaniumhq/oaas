@@ -8,7 +8,7 @@ packages = find_packages()
 
 setup(
     name="oaas",
-    version="1.0.0",
+    version="1.5.1",
     description="Operation as a Service",
     long_description=readme,
     author="Bogdan Mustiata",

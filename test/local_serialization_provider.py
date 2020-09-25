@@ -1,6 +1,7 @@
 from typing import Any, Dict, cast, TypeVar
 
 import oaas._registrations as registrations
+from oaas import ServiceDefinition
 from oaas.client_definition import ClientDefinition
 from oaas.client_provider import ClientMiddleware
 from oaas.server_provider import ServerMiddleware
@@ -37,4 +38,7 @@ class LocalClientServerMiddleware(ClientMiddleware, ServerMiddleware):
         return cast(T, ReflectionInvoker(delegate=service_instance))
 
     def can_handle(self, client_definition: ClientDefinition) -> bool:
+        return True
+
+    def can_serve(self, service: ServiceDefinition) -> bool:
         return True
