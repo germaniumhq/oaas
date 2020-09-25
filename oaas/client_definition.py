@@ -12,7 +12,7 @@ class ClientDefinition:
         name: str,
         version: str = "1",
         code: Callable[..., T],
-        tags: Dict[str, str] = None,
+        tags: Optional[Dict[str, str]] = None,
     ) -> None:
         self.namespace = namespace
         self.name = name
