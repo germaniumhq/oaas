@@ -109,10 +109,12 @@ def get_client(t: Type[T]) -> T:
     """
     for provider in registrations.clients_middleware:
         if t not in registrations.clients:
-            raise Exception(f"Type {t} was not registered using @oaas.client(). You "
-                            f"need to register first the client using @oaas.client() "
-                            f"either as oaas.client('service-name')(GrpcTypeStub) or "
-                            f"decorate the Simple service with @oaas.client.")
+            raise Exception(
+                f"Type {t} was not registered using @oaas.client(). You "
+                f"need to register first the client using @oaas.client() "
+                f"either as oaas.client('service-name')(GrpcTypeStub) or "
+                f"decorate the Simple service with @oaas.client."
+            )
 
         client_definition = registrations.clients[t]
         if provider.can_handle(client_definition):
