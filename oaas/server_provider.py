@@ -1,5 +1,5 @@
 import abc
-from typing import TypeVar
+from typing import TypeVar, Any, Optional, Dict
 
 from oaas.service_definition import ServiceDefinition
 
@@ -21,5 +21,24 @@ class ServerMiddleware(metaclass=abc.ABCMeta):
         ...
 
     @abc.abstractmethod
-    def can_serve(self, service: ServiceDefinition) -> bool:
+    def can_serve(self, service_definition: ServiceDefinition) -> bool:
+        ...
+
+    @abc.abstractmethod
+    def can_publish(self, *, instance: Any) -> bool:
+        ...
+
+    @abc.abstractmethod
+    def publish(
+        self,
+        instance: Any,
+        name: str,
+        namespace: str = "default",
+        version: str = "1",
+        tags: Optional[Dict[str, str]] = None,
+    ) -> str:
+        ...
+
+    @abc.abstractmethod
+    def unpublish(self, id: str) -> None:
         ...

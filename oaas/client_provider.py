@@ -14,6 +14,11 @@ class ClientMiddleware(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def create_client(self, client_definition: ClientDefinition) -> T:
+        """
+        Create a client proxy to the target definition. Tags might
+        refine, or override the tags from the default client definition
+        registration
+        """
         ...
 
     @abc.abstractmethod

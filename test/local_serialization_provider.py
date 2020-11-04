@@ -1,4 +1,4 @@
-from typing import Any, Dict, cast, TypeVar
+from typing import Any, Dict, cast, TypeVar, Optional
 
 import oaas._registrations as registrations
 from oaas import ServiceDefinition
@@ -40,5 +40,27 @@ class LocalClientServerMiddleware(ClientMiddleware, ServerMiddleware):
     def can_handle(self, client_definition: ClientDefinition) -> bool:
         return True
 
-    def can_serve(self, service: ServiceDefinition) -> bool:
+    def can_serve(self, service_definition: ServiceDefinition) -> bool:
         return True
+
+    def can_publish(self, *, instance: Any) -> bool:
+        return False
+
+    def publish(
+        self,
+        instance: Any,
+        name: str,
+        namespace: str = "default",
+        version: str = "1",
+        tags: Optional[Dict[str, str]] = None,
+    ) -> str:
+        raise Exception(
+            f"LocalClientServerMiddleware is a test middleware. "
+            f"Can't serve service {instance}"
+        )
+
+    def unpublish(self, id: str) -> None:
+        raise Exception(
+            f"LocalClientServerMiddleware is a test middleware. "
+            f"Can't unserve service instance id {id}"
+        )
