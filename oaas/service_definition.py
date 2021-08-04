@@ -23,3 +23,6 @@ class ServiceDefinition:
     @property
     def gav(self) -> str:
         return f"{self.namespace}:{self.name}:{self.version}"
+
+    def __repr__(self) -> str:
+        return self.gav

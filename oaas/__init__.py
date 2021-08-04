@@ -99,7 +99,7 @@ def unpublish(
     *,
     id: str,
 ) -> None:
-    if not id in _dynamic_registrations:
+    if id not in _dynamic_registrations:
         raise Exception("Service wasn't pushed as a dynamic service.")
 
     middleware = _dynamic_registrations[id]
