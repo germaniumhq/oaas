@@ -1,6 +1,6 @@
 package(default_visibility = ["PUBLIC"])
 
-subinclude("//build/please:python.plz")
+subinclude("//_build/please:python.plz")
 
 python_library(
   name="oaas-lib",
